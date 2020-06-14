@@ -8,7 +8,7 @@
 
 #### Build
 - generate makefile using qmake:
-  - ```qmake -o Makefile pass-zero.pro
+  - ```qmake -o Makefile pass-zero.pro```
 - Compile the project:
   - ```make -j8 #option -j8 enables multiple jobs```
 
