@@ -6,16 +6,18 @@
 class dataitem{
 
 private:
+    QString label;
     QString user;
     QString pass;
     QString note;
 public:
     dataitem(){}
-    dataitem(QString u, QString p, QString n): user(u), pass(p),note(n){}
-    void setDate(QString user, QString pass, QString note);
+    dataitem(QString l, QString u, QString p, QString n): label(l), user(u), pass(p),note(n){}
+    void setData(QString label, QString user, QString pass, QString note);
     QString getUser();
     QString getPass();
     QString getNote();
+    QString getLabel();
 
     friend QDataStream &operator <<(QDataStream &stream, const dataitem &dt);
     friend QDataStream &operator >>(QDataStream &stream, dataitem &dt);
