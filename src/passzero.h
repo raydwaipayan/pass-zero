@@ -19,9 +19,12 @@ private slots:
     void exit();
     void about();
     void save();
+    void open();
+    void saveAs();
+    void newFile();
+    void reset();
 
-    void on_buttonCreate_released();
-    void on_buttonOpen_released();
+    void on_btnAdd_clicked();
 
 private:
     Ui::passzero *ui;
