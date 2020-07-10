@@ -2,6 +2,7 @@
 #define PASSZERO_H
 
 #include <QMainWindow>
+#include "dataitem.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class passzero; }
@@ -17,11 +18,14 @@ public:
 private slots:
     void exit();
     void about();
+    void save();
 
     void on_buttonCreate_released();
     void on_buttonOpen_released();
 
 private:
     Ui::passzero *ui;
+    QVector<dataitem> data;
+    QString currentfile;
 };
 #endif // PASSZERO_H
