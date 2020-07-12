@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "dataitem.h"
+#include <QListWidgetItem>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class passzero; }
@@ -23,12 +24,21 @@ private slots:
     void saveAs();
     void newFile();
     void reset();
+    void changeActive(const QString &, const QString &, const QString &, const QString &);
+    void clearContext();
 
-    void on_btnAdd_clicked();
+    void on_textPassword_textChanged(const QString &arg1);
+
+    void on_btnNewEntry_released();
+
+    void on_btnDelete_released();
+
+    void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
 private:
     Ui::passzero *ui;
     QVector<dataitem> data;
     QString currentfile;
+    QString label, user, pass, note;
 };
 #endif // PASSZERO_H

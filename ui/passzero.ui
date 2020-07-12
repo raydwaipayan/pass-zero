@@ -37,19 +37,6 @@
      <string>Delete current</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnAdd">
-    <property name="geometry">
-     <rect>
-      <x>690</x>
-      <y>10</y>
-      <width>94</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add</string>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="textUsername">
     <property name="geometry">
      <rect>
@@ -70,7 +57,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="textNote">
     <property name="geometry">
      <rect>
       <x>260</x>
@@ -158,6 +145,19 @@
     </property>
     <property name="text">
      <string>Open an existing database or create a new one to continue!</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnNewEntry">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>10</y>
+      <width>94</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>New Entry</string>
     </property>
    </widget>
   </widget>
