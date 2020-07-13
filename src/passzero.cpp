@@ -29,8 +29,8 @@ passzero::passzero(QWidget *parent)
     ui->listWidget->setVisible(false);
     ui->btnDelete->setVisible(false);
     ui->btnNewEntry->setVisible(false);
+    ui->nullLabel->setVisible(true);
 }
-
 
 passzero::~passzero()
 {
@@ -137,7 +137,6 @@ void passzero::open()
     }
     reset();
     currentfile=filename;
-
     QDataStream in(&file);
     in>>data;
 
@@ -189,11 +188,6 @@ void passzero::about()
     msgbox.exec();
 }
 
-void passzero::on_textPassword_textChanged(const QString &arg1)
-{
-    pass=arg1;
-}
-
 void passzero::on_btnNewEntry_released()
 {
     bool ok;
@@ -214,23 +208,19 @@ void passzero::on_btnNewEntry_released()
 
 void passzero::on_btnDelete_released()
 {
+    if(ui->listWidget->currentItem()==nullptr)
+        return;
+
     qint64 idx=ui->listWidget->currentRow();
-
-    QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
-    foreach(QListWidgetItem * item, items)
-    {
-       clearContext();
-       delete ui->listWidget->takeItem(ui->listWidget->row(item));
-    }
+    delete ui->listWidget->takeItem(ui->listWidget->currentRow());
     data.remove(idx);
-
+    clearContext();
 }
 
 void passzero::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
     qint64 previdx=-1;
     qint64 curidx=-1;
-
     for(qint64 i=0;i<ui->listWidget->count();i++)
     {
         QListWidgetItem* item = ui->listWidget->item(i);
@@ -252,4 +242,22 @@ void passzero::on_listWidget_currentItemChanged(QListWidgetItem *current, QListW
         dataitem &cur=data[curidx];
         changeActive(cur.getLabel(),cur.getUser(), cur.getPass(), cur.getNote());
     }
+}
+
+void passzero::on_textLabel_textChanged(const QString &arg1)
+{
+    label=arg1;
+}
+void passzero::on_textPassword_textChanged(const QString &arg1)
+{
+    pass=arg1;
+}
+void passzero::on_textUsername_textChanged(const QString &arg1)
+{
+    user=arg1;
+}
+
+void passzero::on_textNote_textChanged()
+{
+    note=ui->textNote->toPlainText();
 }

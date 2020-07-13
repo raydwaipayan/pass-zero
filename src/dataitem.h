@@ -12,8 +12,11 @@ private:
     QString note;
 public:
     dataitem(){}
+    ~dataitem(){}
+    dataitem(const dataitem&);
+    dataitem& operator=(const dataitem &);
     dataitem(QString l, QString u, QString p, QString n): label(l), user(u), pass(p),note(n){}
-    void setData(QString label, QString user, QString pass, QString note);
+    void setData(const QString &label,const QString &user, const QString &pass, const QString &note);
     QString getUser();
     QString getPass();
     QString getNote();

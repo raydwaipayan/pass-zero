@@ -35,6 +35,12 @@ private slots:
 
     void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
+    void on_textLabel_textChanged(const QString &arg1);
+
+    void on_textUsername_textChanged(const QString &arg1);
+
+    void on_textNote_textChanged();
+
 private:
     Ui::passzero *ui;
     QVector<dataitem> data;

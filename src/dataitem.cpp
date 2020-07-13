@@ -1,13 +1,30 @@
 #include "dataitem.h"
 
-void dataitem::setData(QString label, QString user, QString pass, QString note)
+void dataitem::setData(const QString &label, const QString &user, const QString &pass, const QString &note)
 {
     this->label=label;
     this->user=user;
     this->pass=pass;
     this->note=note;
 }
+dataitem::dataitem(const dataitem &rhs)
+{
+    this->label=rhs.label;
+    this->user=rhs.user;
+    this->pass=rhs.pass;
+    this->note=rhs.note;
+}
+dataitem& dataitem::operator=(const dataitem &rhs)
+{
+    if(this==(&rhs))
+        return (*this);
 
+    this->label=rhs.label;
+    this->user=rhs.user;
+    this->pass=rhs.pass;
+    this->note=rhs.note;
+    return (*this);
+}
 QString dataitem::getUser()
 {
     return user;
