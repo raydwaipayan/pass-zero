@@ -15,14 +15,32 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+LIBS += -L/usr/lib+ -lcryptopp
+INCLUDEPATH += /usr/include/cryptopp
+
 SOURCES += \
+    src/crypt.cpp \
     src/dataitem.cpp \
     src/main.cpp \
-    src/passzero.cpp
+    src/passzero.cpp \
+    src/argon2.cpp \
+    src/argon2-core.cpp \
+    src/argon2-opt-core.cpp \
+    src/kat.cpp \
+    src/blake2b.c
 
 HEADERS += \
+    src/crypt.h \
     src/dataitem.h \
-    src/passzero.h
+    src/passzero.h \
+    src/argon2.h \
+    src/argon2-core.h \
+    src/kat.h \
+    src/blake2.h \
+    src/blake2-impl.h \
+    src/blamka-round-opt.h \
+    src/blamka-round-ref.h \
+    src/brg-endian.h
 
 FORMS += \
     ui/passzero.ui

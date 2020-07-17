@@ -25,6 +25,22 @@ dataitem& dataitem::operator=(const dataitem &rhs)
     this->note=rhs.note;
     return (*this);
 }
+void dataitem::setUser(const QString &user)
+{
+    this->user=user;
+}
+void dataitem::setPass(const QString &pass)
+{
+    this->pass=pass;
+}
+void dataitem::setNote(const QString &note)
+{
+    this->note=note;
+}
+void dataitem::setLabel(const QString &label)
+{
+    this->label=label;
+}
 QString dataitem::getUser()
 {
     return user;

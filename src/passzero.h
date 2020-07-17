@@ -24,27 +24,23 @@ private slots:
     void saveAs();
     void newFile();
     void reset();
-    void changeActive(const QString &, const QString &, const QString &, const QString &);
-    void clearContext();
-
-    void on_textPassword_textChanged(const QString &arg1);
-
+    void clearDataView();
+    void updateDataView();
+    void clearData();
+    void setView(const bool&);
+    void on_textPassword_textChanged(const QString &);
     void on_btnNewEntry_released();
-
     void on_btnDelete_released();
-
-    void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
-
     void on_textLabel_textChanged(const QString &arg1);
-
     void on_textUsername_textChanged(const QString &arg1);
-
     void on_textNote_textChanged();
+    void on_listWidget_currentRowChanged(int currentRow);
 
 private:
     Ui::passzero *ui;
     QVector<dataitem> data;
     QString currentfile;
-    QString label, user, pass, note;
+    qint64 curidx;
+    bool delproc;
 };
 #endif // PASSZERO_H

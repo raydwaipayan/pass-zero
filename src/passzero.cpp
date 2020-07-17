@@ -8,7 +8,7 @@
 
 passzero::passzero(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::passzero)
+    , ui(new Ui::passzero), curidx(-1), delproc(false)
 {
     ui->setupUi(this);
     connect(ui->actionAbout, &QAction::triggered, this, &passzero::about);
@@ -18,18 +18,7 @@ passzero::passzero(QWidget *parent)
     connect(ui->actionOpen, &QAction::triggered, this, &passzero::open);
     connect(ui->actionNew, &QAction::triggered, this, &passzero::newFile);
 
-    ui->label->setVisible(false);
-    ui->label_2->setVisible(false);
-    ui->label_3->setVisible(false);
-    ui->label_4->setVisible(false);
-    ui->textNote->setVisible(false);
-    ui->textUsername->setVisible(false);
-    ui->textPassword->setVisible(false);
-    ui->textLabel->setVisible(false);
-    ui->listWidget->setVisible(false);
-    ui->btnDelete->setVisible(false);
-    ui->btnNewEntry->setVisible(false);
-    ui->nullLabel->setVisible(true);
+    setView(false);
 }
 
 passzero::~passzero()
@@ -37,45 +26,53 @@ passzero::~passzero()
     delete ui;
 }
 
-void passzero::reset(){
-    ui->label->setVisible(true);
-    ui->label_2->setVisible(true);
-    ui->label_3->setVisible(true);
-    ui->label_4->setVisible(true);
-    ui->textNote->setVisible(true);
-    ui->textUsername->setVisible(true);
-    ui->textPassword->setVisible(true);
-    ui->textLabel->setVisible(true);
-    ui->listWidget->setVisible(true);
-    ui->btnDelete->setVisible(true);
-    ui->btnNewEntry->setVisible(true);
-    ui->nullLabel->setVisible(false);
-    clearContext();
+void passzero::clearData()
+{
     ui->listWidget->clear();
     data.clear();
 }
+void passzero::setView(const bool &b)
+{
+    ui->label->setVisible(b);
+    ui->label_2->setVisible(b);
+    ui->label_3->setVisible(b);
+    ui->label_4->setVisible(b);
+    ui->textNote->setVisible(b);
+    ui->textUsername->setVisible(b);
+    ui->textPassword->setVisible(b);
+    ui->textLabel->setVisible(b);
+    ui->listWidget->setVisible(b);
+    ui->btnDelete->setVisible(b);
+    ui->btnNewEntry->setVisible(b);
+    ui->nullLabel->setVisible(!b);
+}
 
-void passzero::clearContext()
+void passzero::clearDataView()
 {
     ui->textLabel->clear();
     ui->textUsername->clear();
     ui->textPassword->clear();
     ui->textNote->clear();
-    this->label="";
-    this->user="";
-    this->pass="";
-    this->note="";
 }
-void passzero::changeActive(const QString &label, const QString &username, const QString &password, const QString &note)
+
+void passzero::reset(){
+    setView(true);
+    curidx=-1;
+    updateDataView();
+    clearData();
+}
+
+void passzero::updateDataView()
 {
-    ui->textLabel->setText(label);
-    ui->textUsername->setText(username);
-    ui->textPassword->setText(password);
-    ui->textNote->setText(note);
-    this->label=label;
-    this->user=username;
-    this->pass=password;
-    this->note=note;
+    if(curidx==-1){
+        clearDataView();
+        return;
+    }
+    dataitem &cur=data[curidx];
+    ui->textLabel->setText(cur.getLabel());
+    ui->textUsername->setText(cur.getUser());
+    ui->textPassword->setText(cur.getPass());
+    ui->textNote->setText(cur.getNote());
 }
 
 void passzero::newFile()
@@ -203,61 +200,47 @@ void passzero::on_btnNewEntry_released()
     item->setText(newitem.getLabel());
     ui->listWidget->addItem(item);
     ui->listWidget->setCurrentItem(item);
-    changeActive(text, QString(), QString(), QString());
 }
 
 void passzero::on_btnDelete_released()
 {
-    if(ui->listWidget->currentItem()==nullptr)
+    if(curidx==-1)
         return;
-
-    qint64 idx=ui->listWidget->currentRow();
+    delproc=true;
     delete ui->listWidget->takeItem(ui->listWidget->currentRow());
-    data.remove(idx);
-    clearContext();
-}
-
-void passzero::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
-{
-    qint64 previdx=-1;
-    qint64 curidx=-1;
-    for(qint64 i=0;i<ui->listWidget->count();i++)
-    {
-        QListWidgetItem* item = ui->listWidget->item(i);
-        if(current!=nullptr && item==current)
-        {
-            curidx=i;
-        }
-        if(previous!=nullptr && item==previous)
-        {
-            previdx=i;
-        }
-    }
-    if(previdx!=-1){
-        dataitem &prev=data[previdx];
-        prev.setData(label, user, pass, note);
-    }
-    if(curidx!=-1)
-    {
-        dataitem &cur=data[curidx];
-        changeActive(cur.getLabel(),cur.getUser(), cur.getPass(), cur.getNote());
-    }
+    delproc=false;
+    data.remove(curidx);
+    curidx=ui->listWidget->currentRow();
+    updateDataView();
 }
 
 void passzero::on_textLabel_textChanged(const QString &arg1)
 {
-    label=arg1;
+    if(curidx==-1) return;
+    data[curidx].setLabel(arg1);
 }
 void passzero::on_textPassword_textChanged(const QString &arg1)
 {
-    pass=arg1;
+    if(curidx==-1) return;
+    data[curidx].setPass(arg1);
 }
 void passzero::on_textUsername_textChanged(const QString &arg1)
 {
-    user=arg1;
+    if(curidx==-1) return;
+    data[curidx].setUser(arg1);
 }
 
 void passzero::on_textNote_textChanged()
 {
-    note=ui->textNote->toPlainText();
+    if(curidx==-1) return;
+    data[curidx].setNote(ui->textNote->toPlainText());
 }
+
+void passzero::on_listWidget_currentRowChanged(int currentRow)
+{
+    if(delproc)
+        return;
+    curidx=currentRow;
+    updateDataView();
+}
+
