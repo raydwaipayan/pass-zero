@@ -19,31 +19,38 @@ LIBS += -L/usr/lib+ -lcryptopp
 INCLUDEPATH += /usr/include/cryptopp
 
 SOURCES += \
-    src/crypt.cpp \
+    src/crypto/hasher.cpp \
+    src/database.cpp \
     src/dataitem.cpp \
     src/main.cpp \
     src/passzero.cpp \
-    src/argon2.cpp \
-    src/argon2-core.cpp \
-    src/argon2-opt-core.cpp \
-    src/kat.cpp \
-    src/blake2b.c
+    src/crypto/argon2.cpp \
+    src/crypto/argon2-core.cpp \
+    src/crypto/argon2-opt-core.cpp \
+    src/crypto/kat.cpp \
+    src/crypto/blake2b.c \
+    src/reader.cpp \
+    src/writer.cpp
 
 HEADERS += \
-    src/crypt.h \
+    src/crypto/hasher.h \
+    src/database.h \
     src/dataitem.h \
     src/passzero.h \
-    src/argon2.h \
-    src/argon2-core.h \
-    src/kat.h \
-    src/blake2.h \
-    src/blake2-impl.h \
-    src/blamka-round-opt.h \
-    src/blamka-round-ref.h \
-    src/brg-endian.h
+    src/crypto/argon2.h \
+    src/crypto/argon2-core.h \
+    src/crypto/kat.h \
+    src/crypto/blake2.h \
+    src/crypto/blake2-impl.h \
+    src/crypto/blamka-round-opt.h \
+    src/crypto/blamka-round-ref.h \
+    src/crypto/brg-endian.h \
+    src/reader.h \
+    src/writer.h
 
 FORMS += \
-    ui/passzero.ui
+    ui/passzero.ui \
+    ui/welcome.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

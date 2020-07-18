@@ -2,7 +2,7 @@
 #define PASSZERO_H
 
 #include <QMainWindow>
-#include "dataitem.h"
+#include "database.h"
 #include <QListWidgetItem>
 
 QT_BEGIN_NAMESPACE
@@ -38,9 +38,9 @@ private slots:
 
 private:
     Ui::passzero *ui;
-    QVector<dataitem> data;
+    database *db;
     QString currentfile;
-    qint64 curidx;
+    int curidx;
     bool delproc;
 };
 #endif // PASSZERO_H

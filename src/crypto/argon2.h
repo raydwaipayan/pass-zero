@@ -15,6 +15,7 @@
 
 #include <cstddef>
 #include <limits.h>
+#include <stdint.h>
 
 /************************* Constants to enable Known Answer Tests (KAT)  **************************************************/
 

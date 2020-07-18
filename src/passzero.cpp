@@ -8,7 +8,7 @@
 
 passzero::passzero(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::passzero), curidx(-1), delproc(false)
+    , ui(new Ui::passzero), curidx(-1), db(nullptr),delproc(false)
 {
     ui->setupUi(this);
     connect(ui->actionAbout, &QAction::triggered, this, &passzero::about);
@@ -29,7 +29,7 @@ passzero::~passzero()
 void passzero::clearData()
 {
     ui->listWidget->clear();
-    data.clear();
+    db->clear();
 }
 void passzero::setView(const bool &b)
 {
@@ -59,7 +59,8 @@ void passzero::reset(){
     setView(true);
     curidx=-1;
     updateDataView();
-    clearData();
+    if(db!=nullptr)
+        clearData();
 }
 
 void passzero::updateDataView()
@@ -68,7 +69,8 @@ void passzero::updateDataView()
         clearDataView();
         return;
     }
-    dataitem &cur=data[curidx];
+    dataitem cur;
+    db->getItem(curidx,cur);
     ui->textLabel->setText(cur.getLabel());
     ui->textUsername->setText(cur.getUser());
     ui->textPassword->setText(cur.getPass());
@@ -93,28 +95,27 @@ void passzero::newFile()
     {
         return;
     }
+    bool ok;
+    QString masterstring = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+                                             tr("Enter the master password:"), QLineEdit::Normal,
+                                             QDir::home().dirName(), &ok);
+    if(!ok) return;
     currentfile=filename;
+    if(db!=nullptr)
+        delete db;
+    db=new database(static_cast<const std::string>(masterstring.toStdString()));
     reset();
 }
 void passzero::save()
 {
     if(currentfile.isEmpty())
     {
-        saveAs();
         return;
     }
-    QFile file(currentfile);
-    if(!file.open(QIODevice::ReadWrite))
+    if(db->write(currentfile))
     {
-        QMessageBox::information(this,tr("Unable to open file for saving"),file.errorString());
-        return;
+        QMessageBox::information(this,tr("Data saved successfully!"),tr("Your details are stored in an encrypted file"));
     }
-    QDataStream out(&file);
-    out<<data;
-
-    QMessageBox::information(this,tr("Data saved successfully!"),tr("Your details are stored in an encrypted file"));
-
-    file.close();
 }
 void passzero::open()
 {
@@ -126,28 +127,36 @@ void passzero::open()
         return;
     }
 
-    QFile file(filename);
-    if(!file.open(QIODevice::ReadWrite))
-    {
-        QMessageBox::information(this,tr("Unable to open file"),file.errorString());
+    bool ok;
+    QString masterstring = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+                                             tr("Enter the master password:"), QLineEdit::Normal,
+                                             QDir::home().dirName(), &ok);
+    if(!ok) return;
+    database *openDB=db->read(filename, masterstring);
+    if(openDB==nullptr){
+        QMessageBox::information(this,tr("Failed to open database!"),tr("Incorrect password!"));
         return;
     }
+    if(db==nullptr) delete db;
     reset();
-    currentfile=filename;
-    QDataStream in(&file);
-    in>>data;
+    db=openDB;
 
-    for(qint64 i=0;i<data.size();i++)
+    currentfile=filename;
+
+    for(int i=0;i<db->getSize();i++)
     {
         QListWidgetItem *item=new QListWidgetItem();
-        item->setText(data[i].getLabel());
+        dataitem ditem;
+        db->getItem(i,ditem);
+        item->setText(ditem.getLabel());
         ui->listWidget->addItem(item);
     }
-    file.close();
 }
 
 void passzero::saveAs()
 {
+    if(currentfile.isEmpty() || db==nullptr)
+        return;
     QString filename=QFileDialog::getSaveFileName(this,
                                                   tr("Save Pass Zero file"),"",
                                                   tr("Pass Zero (*.pzk);;All Files (*)"));
@@ -156,17 +165,12 @@ void passzero::saveAs()
         return;
     }
 
-    QFile file(filename);
-    if(!file.open(QIODevice::ReadWrite))
+    if(!db->write(filename))
     {
-        QMessageBox::information(this,tr("Unable to open file"),file.errorString());
+        QMessageBox::information(this,tr("Unable to open file"),tr("Fatal error."));
         return;
     }
     currentfile=filename;
-    QDataStream out(&file);
-    out<<data;
-
-    file.close();
 }
 void passzero::exit()
 {
@@ -194,7 +198,7 @@ void passzero::on_btnNewEntry_released()
     if (!ok) return;
 
     dataitem newitem(text, QString(), QString(), QString());
-    data.append(newitem);
+    db->addItem(newitem);
 
     QListWidgetItem *item = new QListWidgetItem();
     item->setText(newitem.getLabel());
@@ -204,12 +208,12 @@ void passzero::on_btnNewEntry_released()
 
 void passzero::on_btnDelete_released()
 {
-    if(curidx==-1)
+    if(curidx==-1 || curidx>=db->getSize())
         return;
     delproc=true;
     delete ui->listWidget->takeItem(ui->listWidget->currentRow());
     delproc=false;
-    data.remove(curidx);
+    db->removeItem(curidx);
     curidx=ui->listWidget->currentRow();
     updateDataView();
 }
@@ -217,23 +221,31 @@ void passzero::on_btnDelete_released()
 void passzero::on_textLabel_textChanged(const QString &arg1)
 {
     if(curidx==-1) return;
-    data[curidx].setLabel(arg1);
+    dataitem item;
+    db->getItem(curidx,item);
+    item.setLabel(arg1);
 }
 void passzero::on_textPassword_textChanged(const QString &arg1)
 {
     if(curidx==-1) return;
-    data[curidx].setPass(arg1);
+    dataitem item;
+    db->getItem(curidx,item);
+    item.setPass(arg1);
 }
 void passzero::on_textUsername_textChanged(const QString &arg1)
 {
     if(curidx==-1) return;
-    data[curidx].setUser(arg1);
+    dataitem item;
+    db->getItem(curidx,item);
+    item.setUser(arg1);
 }
 
 void passzero::on_textNote_textChanged()
 {
     if(curidx==-1) return;
-    data[curidx].setNote(ui->textNote->toPlainText());
+    dataitem item;
+    db->getItem(curidx,item);
+    item.setNote(ui->textNote->toPlainText());
 }
 
 void passzero::on_listWidget_currentRowChanged(int currentRow)

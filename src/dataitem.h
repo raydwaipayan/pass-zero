@@ -1,8 +1,9 @@
 #ifndef DATAITEM_H
 #define DATAITEM_H
 
-#include <string>
+#include <QString>
 #include <QDataStream>
+using namespace std;
 class dataitem{
 
 private:
@@ -28,6 +29,8 @@ public:
 
     friend QDataStream &operator <<(QDataStream &stream, const dataitem &dt);
     friend QDataStream &operator >>(QDataStream &stream, dataitem &dt);
+    friend class writer;
+    friend class reader;
 };
 
 #endif // DATAITEM_H
