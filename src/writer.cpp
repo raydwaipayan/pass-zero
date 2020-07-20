@@ -27,7 +27,7 @@ void writer::write(database d, const QString & filename)
 {
     CBC_Mode<AES>::Encryption encryptor(d.key, d.key.size(), d.iv);
     QFile file(filename);
-    if(!file.open(QIODevice::WriteOnly))
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
 //        QMessageBox::information(this,tr("Unable to open file"),file.errorString());
         return;
@@ -35,6 +35,7 @@ void writer::write(database d, const QString & filename)
 
     QDataStream out(&file);
     out<<QString::fromStdString(d.masteriv);
+    out<<QString::fromStdString(d.salt);
     out<<QString::fromStdString(d.encidentifier);
     out<<QString::fromStdString(d.encryptedkey);
     out<<QString::fromStdString(d.encryptediv);

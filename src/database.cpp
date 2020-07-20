@@ -7,6 +7,7 @@
 #include <cryptopp/filters.h>
 #include <cryptopp/base64.h>
 #include <QDebug>
+#include "crypto/hasher.h"
 using namespace CryptoPP;
 void database::checkKey(std::string &masterkey)
 {
@@ -20,11 +21,20 @@ void database::checkKey(std::string &masterkey)
     }
 }
 
+std::string database::genKey(const std::string &masterstring, const std::string &salt)
+{
+    std::string mkstring;
+    mkstring=hasher::hash(masterstring, salt);
+    checkKey(mkstring);
+    return mkstring;
+}
+
 database::database(const std::string& masterstring)
 {
-    std::string masterkeyString=masterstring;
-    database::checkKey(masterkeyString);
-    this->masterstring=masterstring;
+    std::string masterkeyString, salt;
+    salt=hasher::genSalt();
+    masterkeyString=genKey(masterstring, salt);
+
     masterkey=SecByteBlock((const byte*)(masterkeyString.data()),masterkeyString.size());
     SecByteBlock msiv(0x00, AES::BLOCKSIZE);
 
@@ -46,12 +56,13 @@ database::database(const std::string& masterstring)
                        ));
     ArraySource as2(iv, iv.size(), true,
                         new StreamTransformationFilter(
-                            encryptor, new Base64Encoder(new StringSink(encryptediv))));
+                              encryptor, new Base64Encoder(new StringSink(encryptediv))));
 
-    ArraySource as3(msiv, msiv.size(), true,
+    ArraySource as3(salt, true,
+                      new Base64Encoder(new StringSink(this->salt)));
+
+    ArraySource as4(msiv, msiv.size(), true,
              new Base64Encoder(new StringSink(masteriv)));
-
-
 }
 
 int database::addItem(const dataitem &d)
@@ -59,12 +70,11 @@ int database::addItem(const dataitem &d)
     data.push_back(d);
     return data.size()-1;
 }
-bool database::getItem(const int &idx, dataitem& item)
+dataitem* database::getItem(const int &idx)
 {
     if(idx>=data.size())
-        return false;
-    item=data[idx];
-    return true;
+        return nullptr;
+    return &data[idx];
 }
 void database::clear()
 {
@@ -83,19 +93,15 @@ bool database::removeItem(const int &idx)
     data.remove(idx);
     return true;
 }
-database* database::genEmptyDb(const std::string & masterstring)
+database* database::genEmptyDb()
 {
     database *newDb=new database();
-    newDb->masterstring=masterstring;
-    std::string masterkeyString=masterstring;
-    database::checkKey(masterkeyString);
-    newDb->masterkey=SecByteBlock((const byte *)(masterkeyString.data()),masterkeyString.size());
     return newDb;
 }
 database* database::read(const QString &filename, const QString &masterstring)
 {
-    database *temp=database::genEmptyDb(masterstring.toStdString());
-    if(reader::read((*temp),filename))
+    database *temp=database::genEmptyDb();
+    if(reader::read((*temp), masterstring, filename))
         return temp;
     return nullptr;
 }

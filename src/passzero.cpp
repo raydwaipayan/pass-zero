@@ -11,6 +11,7 @@ passzero::passzero(QWidget *parent)
     , ui(new Ui::passzero), curidx(-1), db(nullptr),delproc(false)
 {
     ui->setupUi(this);
+    this->setFixedSize(this->geometry().width(),this->geometry().height());
     connect(ui->actionAbout, &QAction::triggered, this, &passzero::about);
     connect(ui->actionExit, &QAction::triggered, this, &passzero::exit);
     connect(ui->actionSave, &QAction::triggered, this, &passzero::save);
@@ -69,12 +70,12 @@ void passzero::updateDataView()
         clearDataView();
         return;
     }
-    dataitem cur;
-    db->getItem(curidx,cur);
-    ui->textLabel->setText(cur.getLabel());
-    ui->textUsername->setText(cur.getUser());
-    ui->textPassword->setText(cur.getPass());
-    ui->textNote->setText(cur.getNote());
+    dataitem *cur;
+    cur=db->getItem(curidx);
+    ui->textLabel->setText(cur->getLabel());
+    ui->textUsername->setText(cur->getUser());
+    ui->textPassword->setText(cur->getPass());
+    ui->textNote->setText(cur->getNote());
 }
 
 void passzero::newFile()
@@ -103,7 +104,7 @@ void passzero::newFile()
     currentfile=filename;
     if(db!=nullptr)
         delete db;
-    db=new database(static_cast<const std::string>(masterstring.toStdString()));
+    db=new database(static_cast<const std::string>(masterstring.toUtf8()));
     reset();
 }
 void passzero::save()
@@ -146,10 +147,11 @@ void passzero::open()
     for(int i=0;i<db->getSize();i++)
     {
         QListWidgetItem *item=new QListWidgetItem();
-        dataitem ditem;
-        db->getItem(i,ditem);
-        item->setText(ditem.getLabel());
-        ui->listWidget->addItem(item);
+        dataitem *ditem;
+        if((ditem=db->getItem(i))!=nullptr){
+            item->setText(ditem->getLabel());
+            ui->listWidget->addItem(item);
+        }
     }
 }
 
@@ -221,31 +223,31 @@ void passzero::on_btnDelete_released()
 void passzero::on_textLabel_textChanged(const QString &arg1)
 {
     if(curidx==-1) return;
-    dataitem item;
-    db->getItem(curidx,item);
-    item.setLabel(arg1);
+    dataitem *item;
+    if((item=db->getItem(curidx))!=nullptr)
+        item->setLabel(arg1);
 }
 void passzero::on_textPassword_textChanged(const QString &arg1)
 {
     if(curidx==-1) return;
-    dataitem item;
-    db->getItem(curidx,item);
-    item.setPass(arg1);
+    dataitem *item;
+    if((item=db->getItem(curidx))!=nullptr)
+        item->setPass(arg1);
 }
 void passzero::on_textUsername_textChanged(const QString &arg1)
 {
     if(curidx==-1) return;
-    dataitem item;
-    db->getItem(curidx,item);
-    item.setUser(arg1);
+    dataitem *item;
+    if((item=db->getItem(curidx))!=nullptr)
+        item->setUser(arg1);
 }
 
 void passzero::on_textNote_textChanged()
 {
     if(curidx==-1) return;
-    dataitem item;
-    db->getItem(curidx,item);
-    item.setNote(ui->textNote->toPlainText());
+    dataitem *item;
+    if((item=db->getItem(curidx))!=nullptr)
+        item->setNote(ui->textNote->toPlainText());
 }
 
 void passzero::on_listWidget_currentRowChanged(int currentRow)
