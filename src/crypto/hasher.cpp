@@ -5,6 +5,14 @@
 #include <QString>
 #include <exception>
 #include <QDebug>
+
+template<typename a>
+a min(a a1, a a2)
+{
+    if(a1<a2) return a1;
+    else return a2;
+}
+
 std::string hasher::hashutil(uint8_t *out, char *pwd, uint8_t *salt, uint32_t t_cost,
                          uint32_t m_cost, uint32_t lanes, uint32_t threads,
                          const char *type)
@@ -77,7 +85,8 @@ std::string hasher::hash(const std::string &spwd, const std::string &ssalt)
     memcpy(salt, ssalt.data(),ARGON2_SALT_LEN_DEF);
 
     char pwd[32];
-    memcpy(pwd,spwd.data(),sizeof(pwd));
+    memset(pwd,0x00,sizeof(pwd));
+    memcpy(pwd,spwd.data(),min(sizeof(pwd),spwd.size()));
 
     unsigned char out[CryptoPP::AES::MAX_KEYLENGTH];
     memset(out,0x00,sizeof(out));
