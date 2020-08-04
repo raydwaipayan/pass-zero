@@ -49,7 +49,8 @@ HEADERS += \
     src/writer.h
 
 FORMS += \
-    ui/passzero.ui
+    ui/passzero.ui \
+    ui/passzero_old.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

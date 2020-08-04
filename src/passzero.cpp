@@ -34,18 +34,7 @@ void passzero::clearData()
 }
 void passzero::setView(const bool &b)
 {
-    ui->label->setVisible(b);
-    ui->label_2->setVisible(b);
-    ui->label_3->setVisible(b);
-    ui->label_4->setVisible(b);
-    ui->textNote->setVisible(b);
-    ui->textUsername->setVisible(b);
-    ui->textPassword->setVisible(b);
-    ui->textLabel->setVisible(b);
-    ui->listWidget->setVisible(b);
-    ui->btnDelete->setVisible(b);
-    ui->btnNewEntry->setVisible(b);
-    ui->nullLabel->setVisible(!b);
+    ui->stackedWidget->setCurrentIndex(b);
 }
 
 void passzero::clearDataView()
@@ -194,7 +183,7 @@ void passzero::about()
 void passzero::on_btnNewEntry_released()
 {
     bool ok;
-    QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+    QString text = QInputDialog::getText(this, tr("New Entry"),
                                              tr("Entry label:"), QLineEdit::Normal,
                                              QDir::home().dirName(), &ok);
     if (!ok) return;
