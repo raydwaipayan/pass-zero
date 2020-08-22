@@ -3,6 +3,7 @@
 #include <QtDebug>
 #include <QListWidgetItem>
 #include <QInputDialog>
+#include <QAction>
 
 #include "passzero.h"
 #include "ui_passzero.h"
@@ -17,13 +18,38 @@ passzero::passzero(QWidget *parent)
     this->setFixedSize(this->geometry().width(), this->geometry().height());
 
     // Connect menubar sigals to the slots
-    connect(ui->actionAbout,   &QAction::triggered, this, &passzero::about);
-    connect(ui->actionExit,    &QAction::triggered, this, &passzero::exit);
-    connect(ui->actionSave,    &QAction::triggered, this, &passzero::save);
-    connect(ui->actionSave_As, &QAction::triggered, this, &passzero::saveAs);
-    connect(ui->actionOpen,    &QAction::triggered, this, &passzero::open);
-    connect(ui->actionNew,     &QAction::triggered, this, &passzero::newFile);
-
+    connect(ui->actionAbout,
+            &QAction::triggered,
+            this,
+            &passzero::about);
+    connect(ui->actionExit,
+            &QAction::triggered,
+            this,
+            &passzero::exit);
+    connect(ui->actionSave,
+            &QAction::triggered,
+            this,
+            &passzero::save);
+    connect(ui->actionSave_As,
+            &QAction::triggered,
+            this,
+            &passzero::saveAs);
+    connect(ui->actionOpen,
+            &QAction::triggered,
+            this,
+            &passzero::open);
+    connect(ui->actionNew,
+            &QAction::triggered,
+            this,
+            &passzero::newFile);
+    connect(ui->actionChange_Master_Key,
+            &QAction::triggered,
+            this,
+            &passzero::changeMasterKey);
+    connect(ui->actionRotate_Database_keys,
+            &QAction::triggered,
+            this,
+            &passzero::rotateDbKey);
     setView(false);
 }
 
@@ -42,6 +68,16 @@ void passzero::clearData()
 void passzero::setView(const bool& b)
 {
     ui->stackedWidget->setCurrentIndex(b);
+
+    if (b)
+    {
+        ui->actionChange_Master_Key->setDisabled(false);
+        ui->actionRotate_Database_keys->setDisabled(false);
+    }
+    else {
+        ui->actionChange_Master_Key->setDisabled(true);
+        ui->actionRotate_Database_keys->setDisabled(true);
+    }
 }
 
 void passzero::clearDataView()
@@ -217,7 +253,9 @@ void passzero::exit()
     msgbox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
     int ret = msgbox.exec();
 
-    if (ret == QMessageBox::Yes) QApplication::exit();
+    if (ret == QMessageBox::Yes) {
+        QApplication::exit();
+    }
 }
 
 void passzero::about()
@@ -226,6 +264,42 @@ void passzero::about()
 
     msgbox.setText("Ultra Secure lightweight password manager");
     msgbox.setInformativeText("Written by Dwaipayan Ray");
+    msgbox.exec();
+}
+
+void passzero::changeMasterKey() {
+    if (db == nullptr) {
+        return;
+    }
+
+    bool ok;
+    QString masterstring =
+        QInputDialog::getText(this,
+                              tr("QInputDialog::getText()"),
+                              tr(
+                                  "Enter new master password:"),
+                              QLineEdit::Normal,
+                              QDir::home().dirName(),
+                              &ok);
+
+    if (!ok) {
+        return;
+    }
+    db->setMasterKey(std::string(masterstring.toUtf8()));
+    QMessageBox msgbox(this);
+
+    msgbox.setText("Successfully changed Master Key!!");
+    msgbox.exec();
+}
+
+void passzero::rotateDbKey() {
+    if (db == nullptr) {
+        return;
+    }
+    db->rotateDbKey();
+    QMessageBox msgbox(this);
+
+    msgbox.setText("Successfully rotated Database Key!!");
     msgbox.exec();
 }
 

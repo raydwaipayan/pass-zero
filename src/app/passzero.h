@@ -31,6 +31,8 @@ private slots:
     void updateDataView();
     void clearData();
     void setView(const bool&);
+    void changeMasterKey();
+    void rotateDbKey();
     void on_textPassword_textChanged(const QString&);
     void on_btnNewEntry_released();
     void on_btnDelete_released();

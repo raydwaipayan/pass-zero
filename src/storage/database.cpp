@@ -19,6 +19,19 @@ database::database(const std::string& master_string)
     db_iv      = Crypto::genIv();
 }
 
+void database::setMasterKey(const std::string& master_string)
+{
+    salt       = Hasher::genSalt();
+    master_key = Crypto::genKey(master_string, salt);
+    master_iv  = Crypto::genIv();
+}
+
+void database::rotateDbKey()
+{
+    db_key = Crypto::genKey();
+    db_iv  = Crypto::genIv();
+}
+
 int database::addItem(const dataitem& d)
 {
     data.push_back(d);

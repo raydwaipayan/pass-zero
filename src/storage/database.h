@@ -18,6 +18,8 @@ public:
 
     static database* genEmptyDb();
     void             clear();
+    void             setMasterKey(const std::string&);
+    void             rotateDbKey();
     database(const std::string&);
     int              addItem(const dataitem&);
     dataitem       * getItem(const int&);

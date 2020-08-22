@@ -203,7 +203,15 @@
     <addaction name="actionExit"/>
     <addaction name="separator"/>
    </widget>
+   <widget class="QMenu" name="menuDatabase">
+    <property name="title">
+     <string>Database</string>
+    </property>
+    <addaction name="actionChange_Master_Key"/>
+    <addaction name="actionRotate_Database_keys"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuDatabase"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionNew">
@@ -246,6 +254,22 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionChange_Master_Key">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Change Master Key</string>
+   </property>
+  </action>
+  <action name="actionRotate_Database_keys">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Rotate Database key</string>
    </property>
   </action>
  </widget>
