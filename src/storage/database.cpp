@@ -1,15 +1,8 @@
-#include <cryptopp/aes.h>
-#include <cryptopp/modes.h>
-#include <cryptopp/osrng.h>
-#include <cryptopp/filters.h>
-#include <cryptopp/base64.h>
-
 #include "database.h"
 #include "hasher.h"
 #include "crypto.h"
-#include <QDebug>
 
-database::database(const std::string& master_string)
+zero::database::database(const std::string& master_string)
 {
     // Initialize all required keys, ivs and salt
     salt       = Hasher::genSalt();
@@ -19,43 +12,43 @@ database::database(const std::string& master_string)
     db_iv      = Crypto::genIv();
 }
 
-void database::setMasterKey(const std::string& master_string)
+void zero::database::setMasterKey(const std::string& master_string)
 {
     salt       = Hasher::genSalt();
     master_key = Crypto::genKey(master_string, salt);
     master_iv  = Crypto::genIv();
 }
 
-void database::rotateDbKey()
+void zero::database::rotateDbKey()
 {
     db_key = Crypto::genKey();
     db_iv  = Crypto::genIv();
 }
 
-int database::addItem(const dataitem& d)
+int zero::database::addItem(const dataitem& d)
 {
     data.push_back(d);
     return data.size() - 1;
 }
 
-dataitem * database::getItem(const int& idx)
+zero::dataitem * zero::database::getItem(const int& idx)
 {
     if (idx >= data.size()) return nullptr;
 
     return &data[idx];
 }
 
-void database::clear()
+void zero::database::clear()
 {
     data.clear();
 }
 
-int database::getSize()
+int zero::database::getSize()
 {
     return data.size();
 }
 
-bool database::removeItem(const int& idx)
+bool zero::database::removeItem(const int& idx)
 {
     if (idx >= getSize())
     {
@@ -65,14 +58,14 @@ bool database::removeItem(const int& idx)
     return true;
 }
 
-database * database::genEmptyDb()
+zero::database * zero::database::genEmptyDb()
 {
     database *newDb = new database();
 
     return newDb;
 }
 
-database::~database()
+zero::database::~database()
 {
     // Secure wipe all keys
     fill(salt.begin(),       salt.end(),       0);

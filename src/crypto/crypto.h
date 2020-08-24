@@ -8,6 +8,7 @@
 
 #include "hasher.h"
 
+namespace zero {
 class Crypto {
 private:
 
@@ -30,5 +31,5 @@ public:
     static std::string base64Encrypt(const std::string&);
     static std::string base64Decrypt(const std::string&);
 };
-
+}
 #endif // CRYPTO_H

@@ -10,7 +10,7 @@
 #include "reader.h"
 #include "writer.h"
 
-Passzero::Passzero(QWidget *parent)
+zero::Passzero::Passzero(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::passzero), db(nullptr), curidx(-1), delproc(false)
 {
@@ -53,19 +53,19 @@ Passzero::Passzero(QWidget *parent)
     setView(false);
 }
 
-Passzero::~Passzero()
+zero::Passzero::~Passzero()
 {
     delete ui;
     delete db;
 }
 
-void Passzero::clearData()
+void zero::Passzero::clearData()
 {
     ui->listWidget->clear();
     db->clear();
 }
 
-void Passzero::setView(const bool& b)
+void zero::Passzero::setView(const bool& b)
 {
     ui->stackedWidget->setCurrentIndex(b);
 
@@ -80,7 +80,7 @@ void Passzero::setView(const bool& b)
     }
 }
 
-void Passzero::clearDataView()
+void zero::Passzero::clearDataView()
 {
     ui->textLabel->clear();
     ui->textUsername->clear();
@@ -88,7 +88,7 @@ void Passzero::clearDataView()
     ui->textNote->clear();
 }
 
-void Passzero::reset() {
+void zero::Passzero::reset() {
     setView(true);
     curidx = -1;
     updateDataView();
@@ -96,7 +96,7 @@ void Passzero::reset() {
     if (db != nullptr) clearData();
 }
 
-void Passzero::updateDataView()
+void zero::Passzero::updateDataView()
 {
     if (curidx == -1) {
         clearDataView();
@@ -111,7 +111,7 @@ void Passzero::updateDataView()
     ui->textNote->setText(cur.getNote());
 }
 
-void Passzero::newFile()
+void zero::Passzero::newFile()
 {
     if (!currentfile.isEmpty())
     {
@@ -153,7 +153,7 @@ void Passzero::newFile()
     reset();
 }
 
-void Passzero::save()
+void zero::Passzero::save()
 {
     if (currentfile.isEmpty())
     {
@@ -169,7 +169,7 @@ void Passzero::save()
     }
 }
 
-void Passzero::open()
+void zero::Passzero::open()
 {
     QString filename = QFileDialog::getOpenFileName(this,
                                                     tr("Open Pass Zero file"),
@@ -200,7 +200,7 @@ void Passzero::open()
     try {
         Reader::read((*openDb), masterstring, filename);
     }
-    catch (exception& e) {
+    catch (std::exception& e) {
         QMessageBox::information(this, tr("Failed to open database!"),
                                  tr(e.what()));
         return;
@@ -221,7 +221,7 @@ void Passzero::open()
     }
 }
 
-void Passzero::saveAs()
+void zero::Passzero::saveAs()
 {
     if (currentfile.isEmpty() || (db == nullptr)) return;
 
@@ -245,7 +245,7 @@ void Passzero::saveAs()
     currentfile = filename;
 }
 
-void Passzero::exit()
+void zero::Passzero::exit()
 {
     QMessageBox msgbox(this);
 
@@ -258,7 +258,7 @@ void Passzero::exit()
     }
 }
 
-void Passzero::about()
+void zero::Passzero::about()
 {
     QMessageBox msgbox(this);
 
@@ -267,7 +267,7 @@ void Passzero::about()
     msgbox.exec();
 }
 
-void Passzero::changeMasterKey() {
+void zero::Passzero::changeMasterKey() {
     if (db == nullptr) {
         return;
     }
@@ -286,13 +286,17 @@ void Passzero::changeMasterKey() {
         return;
     }
     db->setMasterKey(std::string(masterstring.toUtf8()));
-    QMessageBox msgbox(this);
 
-    msgbox.setText("Successfully changed Master Key!!");
-    msgbox.exec();
+    if (Writer::write((*db), currentfile))
+    {
+        QMessageBox msgbox(this);
+
+        msgbox.setText("Successfully changed Master Key!!");
+        msgbox.exec();
+    }
 }
 
-void Passzero::rotateDbKey() {
+void zero::Passzero::rotateDbKey() {
     if (db == nullptr) {
         return;
     }
@@ -303,7 +307,7 @@ void Passzero::rotateDbKey() {
     msgbox.exec();
 }
 
-void Passzero::on_btnNewEntry_released()
+void zero::Passzero::on_btnNewEntry_released()
 {
     bool ok;
     QString text = QInputDialog::getText(this, tr("New Entry"),
@@ -324,7 +328,7 @@ void Passzero::on_btnNewEntry_released()
     ui->listWidget->setCurrentItem(item);
 }
 
-void Passzero::on_btnDelete_released()
+void zero::Passzero::on_btnDelete_released()
 {
     if ((curidx == -1) || (curidx >= db->getSize())) delproc = true;
     delete ui->listWidget->takeItem(ui->listWidget->currentRow());
@@ -334,7 +338,7 @@ void Passzero::on_btnDelete_released()
     updateDataView();
 }
 
-void Passzero::on_textLabel_textChanged(const QString& arg1)
+void zero::Passzero::on_textLabel_textChanged(const QString& arg1)
 {
     if (curidx == -1) {
         return;
@@ -344,7 +348,7 @@ void Passzero::on_textLabel_textChanged(const QString& arg1)
     if ((item = db->getItem(curidx)) != nullptr) item->setLabel(arg1);
 }
 
-void Passzero::on_textPassword_textChanged(const QString& arg1)
+void zero::Passzero::on_textPassword_textChanged(const QString& arg1)
 {
     if (curidx == -1) {
         return;
@@ -354,7 +358,7 @@ void Passzero::on_textPassword_textChanged(const QString& arg1)
     if ((item = db->getItem(curidx)) != nullptr) item->setPass(arg1);
 }
 
-void Passzero::on_textUsername_textChanged(const QString& arg1)
+void zero::Passzero::on_textUsername_textChanged(const QString& arg1)
 {
     if (curidx == -1) {
         return;
@@ -364,7 +368,7 @@ void Passzero::on_textUsername_textChanged(const QString& arg1)
     if ((item = db->getItem(curidx)) != nullptr) item->setUser(arg1);
 }
 
-void Passzero::on_textNote_textChanged()
+void zero::Passzero::on_textNote_textChanged()
 {
     if (curidx == -1) {
         return;
@@ -375,7 +379,7 @@ void Passzero::on_textNote_textChanged()
             ui->textNote->toPlainText());
 }
 
-void Passzero::on_listWidget_currentRowChanged(int currentRow)
+void zero::Passzero::on_listWidget_currentRowChanged(int currentRow)
 {
     if (delproc) {
         return;

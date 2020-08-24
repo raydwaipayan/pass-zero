@@ -11,14 +11,14 @@ a min(a a1, a a2)
     else return a2;
 }
 
-std::string Hasher::hashutil(uint8_t    *out,
-                             char       *pwd,
-                             uint8_t    *salt,
-                             uint32_t    t_cost,
-                             uint32_t    m_cost,
-                             uint32_t    lanes,
-                             uint32_t    threads,
-                             const char *type)
+std::string zero::Hasher::hashutil(uint8_t    *out,
+                                   char       *pwd,
+                                   uint8_t    *salt,
+                                   uint32_t    t_cost,
+                                   uint32_t    m_cost,
+                                   uint32_t    lanes,
+                                   uint32_t    threads,
+                                   const char *type)
 {
     uint32_t out_length      = ARGON2_OUT_LEN_DEF;
     uint32_t salt_length     = ARGON2_SALT_LEN_DEF;
@@ -79,7 +79,7 @@ std::string Hasher::hashutil(uint8_t    *out,
     return os;
 }
 
-std::string Hasher::genSalt()
+std::string zero::Hasher::genSalt()
 {
     CryptoPP::SecByteBlock b(0x00, ARGON2_SALT_LEN_DEF);
     CryptoPP::AutoSeededRandomPool rng;
@@ -89,8 +89,8 @@ std::string Hasher::genSalt()
     return std::string((const char *)b.data(), b.size());
 }
 
-std::string Hasher::hash(const std::string& spwd,
-                         const std::string& ssalt)
+std::string zero::Hasher::hash(const std::string& spwd,
+                               const std::string& ssalt)
 {
     uint8_t salt[ARGON2_SALT_LEN_DEF];
 

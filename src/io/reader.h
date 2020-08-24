@@ -1,9 +1,8 @@
 #ifndef READER_H
 #define READER_H
 #include "database.h"
-#include <cryptopp/aes.h>
-#include <cryptopp/modes.h>
-using namespace CryptoPP;
+
+namespace zero {
 class Reader {
 public:
 
@@ -11,5 +10,5 @@ public:
                      const QString&,
                      const QString& fileame);
 };
-
+}
 #endif // READER_H

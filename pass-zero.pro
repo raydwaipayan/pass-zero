@@ -6,8 +6,8 @@ SUBDIRS = \
 	storage \
  	io \
 	app \
-    docs \
-    tests
+        docs \
+        tests
 
 CONFIG += ordered
 
@@ -16,3 +16,4 @@ io.subdir      = src/io
 storage.subdir = src/storage
 crypto.subdir  = src/crypto
 argon2.subdir  = src/argon2
+docs.subdir = docs

@@ -4,7 +4,7 @@
 #include <cryptopp/base64.h>
 #include "crypto.h"
 
-std::string Crypto::fixKey(const std::string& key)
+std::string zero::Crypto::fixKey(const std::string& key)
 {
     std::string fkey = key;
 
@@ -19,8 +19,8 @@ std::string Crypto::fixKey(const std::string& key)
     return fkey;
 }
 
-std::string Crypto::genKey(const std::string& master_string,
-                           const std::string& salt)
+std::string zero::Crypto::genKey(const std::string& master_string,
+                                 const std::string& salt)
 {
     std::string key = Hasher::hash(master_string, salt);
 
@@ -29,7 +29,7 @@ std::string Crypto::genKey(const std::string& master_string,
     return key;
 }
 
-std::string Crypto::genKey()
+std::string zero::Crypto::genKey()
 {
     CryptoPP::SecByteBlock key(0x00, CryptoPP::AES::MAX_KEYLENGTH);
     CryptoPP::AutoSeededRandomPool rng;
@@ -39,7 +39,7 @@ std::string Crypto::genKey()
     return std::string(reinterpret_cast<const char *>(key.data()), key.size());
 }
 
-std::string Crypto::genIv()
+std::string zero::Crypto::genIv()
 {
     CryptoPP::SecByteBlock iv(0x00, CryptoPP::AES::BLOCKSIZE);
     CryptoPP::AutoSeededRandomPool rng;
@@ -49,7 +49,7 @@ std::string Crypto::genIv()
     return std::string(reinterpret_cast<const char *>(iv.data()), iv.size());
 }
 
-void Crypto::setEncryptor(const std::string& key, const std::string& iv)
+void zero::Crypto::setEncryptor(const std::string& key, const std::string& iv)
 {
     CryptoPP::SecByteBlock bkey(reinterpret_cast<const CryptoPP::byte *>(key.data()),
                                 key.size());
@@ -61,7 +61,7 @@ void Crypto::setEncryptor(const std::string& key, const std::string& iv)
                                                                       biv));
 }
 
-void Crypto::setDecryptor(const std::string& key, const std::string& iv)
+void zero::Crypto::setDecryptor(const std::string& key, const std::string& iv)
 {
     CryptoPP::SecByteBlock bkey(reinterpret_cast<const CryptoPP::byte *>(key.data()),
                                 key.size());
@@ -73,7 +73,7 @@ void Crypto::setDecryptor(const std::string& key, const std::string& iv)
                                                                       biv));
 }
 
-std::string Crypto::encrypt(const std::string& plaintext)
+std::string zero::Crypto::encrypt(const std::string& plaintext)
 {
     std::string ciphertext;
 
@@ -98,7 +98,7 @@ std::string Crypto::encrypt(const std::string& plaintext)
     return ciphertext;
 }
 
-std::string Crypto::decrypt(const std::string& ciphertext)
+std::string zero::Crypto::decrypt(const std::string& ciphertext)
 {
     std::string plaintext;
 
@@ -122,7 +122,7 @@ std::string Crypto::decrypt(const std::string& ciphertext)
     return plaintext;
 }
 
-std::string Crypto::base64Encrypt(const std::string& plaintext)
+std::string zero::Crypto::base64Encrypt(const std::string& plaintext)
 {
     std::string ciphertext;
 
@@ -132,7 +132,7 @@ std::string Crypto::base64Encrypt(const std::string& plaintext)
     return ciphertext;
 }
 
-std::string Crypto::base64Decrypt(const std::string& ciphertext)
+std::string zero::Crypto::base64Decrypt(const std::string& ciphertext)
 {
     std::string plaintext;
 

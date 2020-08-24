@@ -3,7 +3,8 @@
 
 #include <QString>
 #include <QDataStream>
-using namespace std;
+
+namespace zero {
 class dataitem  {
 private:
 
@@ -43,5 +44,5 @@ public:
     friend class Writer;
     friend class Reader;
 };
-
+}
 #endif // DATAITEM_H

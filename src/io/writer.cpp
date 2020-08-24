@@ -4,7 +4,7 @@
 #include "crypto.h"
 
 
-bool Writer::write(database d, const QString& filename)
+bool zero::Writer::write(database d, const QString& filename)
 {
     Crypto crypto;
 
@@ -49,7 +49,7 @@ bool Writer::write(database d, const QString& filename)
         }
         out << d.data;
     }
-    catch (exception& e)
+    catch (std::exception& e)
     {
         file.close();
         qDebug() << e.what();

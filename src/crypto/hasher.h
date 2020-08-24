@@ -5,6 +5,7 @@
 
 #include "argon2.h"
 
+namespace zero {
 class Hasher {
 public:
 
@@ -20,5 +21,5 @@ public:
                             const std::string&);
     static std::string genSalt();
 };
-
+}
 #endif // HASHER_H

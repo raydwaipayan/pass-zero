@@ -1,11 +1,11 @@
 #ifndef DATABASE_H
 #define DATABASE_H
-#include <cryptopp/aes.h>
 
 #include "dataitem.h"
 #include "string.h"
 
-using namespace CryptoPP;
+
+namespace zero {
 class database  {
 private:
 
@@ -29,5 +29,5 @@ public:
     friend class Writer;
     friend class Reader;
 };
-
+}
 #endif // DATABASE_H

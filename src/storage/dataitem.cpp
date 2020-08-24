@@ -1,78 +1,89 @@
 #include "dataitem.h"
 
-void dataitem::setData(const QString &label, const QString &user, const QString &pass, const QString &note)
+void zero::dataitem::setData(const QString& label,
+                             const QString& user,
+                             const QString& pass,
+                             const QString& note)
 {
-    this->label=label;
-    this->user=user;
-    this->pass=pass;
-    this->note=note;
+    this->label = label;
+    this->user  = user;
+    this->pass  = pass;
+    this->note  = note;
 }
-dataitem::dataitem(const dataitem &rhs)
-{
-    this->label=rhs.label;
-    this->user=rhs.user;
-    this->pass=rhs.pass;
-    this->note=rhs.note;
-}
-dataitem& dataitem::operator=(const dataitem &rhs)
-{
-    if(this==(&rhs))
-        return (*this);
 
-    this->label=rhs.label;
-    this->user=rhs.user;
-    this->pass=rhs.pass;
-    this->note=rhs.note;
-    return (*this);
-}
-void dataitem::setUser(const QString &user)
+zero::dataitem::dataitem(const dataitem& rhs)
 {
-    this->user=user;
+    this->label = rhs.label;
+    this->user  = rhs.user;
+    this->pass  = rhs.pass;
+    this->note  = rhs.note;
 }
-void dataitem::setPass(const QString &pass)
+
+zero::dataitem& zero::dataitem::operator=(const dataitem& rhs)
 {
-    this->pass=pass;
+    if (this == (&rhs)) return *this;
+
+    this->label = rhs.label;
+    this->user  = rhs.user;
+    this->pass  = rhs.pass;
+    this->note  = rhs.note;
+    return *this;
 }
-void dataitem::setNote(const QString &note)
+
+void zero::dataitem::setUser(const QString& user)
 {
-    this->note=note;
+    this->user = user;
 }
-void dataitem::setLabel(const QString &label)
+
+void zero::dataitem::setPass(const QString& pass)
 {
-    this->label=label;
+    this->pass = pass;
 }
-QString dataitem::getUser()
+
+void zero::dataitem::setNote(const QString& note)
+{
+    this->note = note;
+}
+
+void zero::dataitem::setLabel(const QString& label)
+{
+    this->label = label;
+}
+
+QString zero::dataitem::getUser()
 {
     return user;
 }
 
-QString dataitem::getPass()
+QString zero::dataitem::getPass()
 {
     return pass;
 }
 
-QString dataitem::getNote()
+QString zero::dataitem::getNote()
 {
     return note;
 }
-QString dataitem::getLabel()
+
+QString zero::dataitem::getLabel()
 {
     return label;
 }
 
-QDataStream &operator <<(QDataStream &stream, const dataitem &dt)
+QDataStream& zero::operator<<(QDataStream& stream, const zero::dataitem& dt)
 {
-    stream<<dt.label;
-    stream<<dt.user;
-    stream<<dt.pass;
-    stream<<dt.note;
+    stream << dt.label;
+    stream << dt.user;
+    stream << dt.pass;
+    stream << dt.note;
     return stream;
 }
-QDataStream &operator >>(QDataStream &stream, dataitem &dt)
+
+QDataStream& zero::operator>>(QDataStream& stream, zero::dataitem& dt)
 {
-    stream>>dt.label;
-    stream>>dt.user;
-    stream>>dt.pass;
-    stream>>dt.note;
+    stream >> dt.label;
+    stream >> dt.user;
+    stream >> dt.pass;
+    stream >> dt.note;
     return stream;
 }

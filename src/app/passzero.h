@@ -10,6 +10,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class passzero; }
 QT_END_NAMESPACE
 
+namespace zero {
 class Passzero : public QMainWindow {
     Q_OBJECT
 
@@ -141,4 +142,5 @@ private:
     int curidx;
     bool delproc;
 };
+}
 #endif // PASSZERO_H

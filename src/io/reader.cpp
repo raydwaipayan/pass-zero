@@ -3,9 +3,9 @@
 #include "reader.h"
 #include "crypto.h"
 
-void Reader::read(database     & d,
-                  const QString& masterstring,
-                  const QString& filename)
+void zero::Reader::read(database     & d,
+                        const QString& masterstring,
+                        const QString& filename)
 {
     QFile file(filename);
 
@@ -52,7 +52,7 @@ void Reader::read(database     & d,
             x.note  = QString::fromStdString(note);
         }
     }
-    catch (exception& e) {
+    catch (std::exception& e) {
         file.close();
         throw std::runtime_error("Incorrect password!");
     }
