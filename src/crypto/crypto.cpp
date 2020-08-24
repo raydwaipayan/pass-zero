@@ -90,7 +90,7 @@ std::string Crypto::encrypt(const std::string& plaintext)
                                           CryptoPP
                                           ::
                                           StringSink(
-                                              ciphertext))));
+                                              ciphertext), false)));
     } catch (CryptoPP::Exception& e)
     {
         std::cerr << "Encrypt error: " << e.what();
@@ -128,7 +128,7 @@ std::string Crypto::base64Encrypt(const std::string& plaintext)
 
     CryptoPP::ArraySource(plaintext, true,
                           new CryptoPP::Base64Encoder(new CryptoPP::StringSink(
-                                                          ciphertext)));
+                                                          ciphertext), false));
     return ciphertext;
 }
 

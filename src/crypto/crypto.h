@@ -27,8 +27,8 @@ public:
                                     const std::string&);
     std::string        encrypt(const std::string&);
     std::string        decrypt(const std::string&);
-    std::string        base64Encrypt(const std::string&);
-    std::string        base64Decrypt(const std::string&);
+    static std::string base64Encrypt(const std::string&);
+    static std::string base64Decrypt(const std::string&);
 };
 
 #endif // CRYPTO_H

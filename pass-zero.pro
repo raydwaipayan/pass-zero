@@ -5,7 +5,9 @@ SUBDIRS = \
 	crypto \
 	storage \
  	io \
-	app
+	app \
+    docs \
+    tests
 
 CONFIG += ordered
 
