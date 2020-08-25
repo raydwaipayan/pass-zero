@@ -9,4 +9,6 @@ private slots:
 
     void base64encrypt();
     void base64decrypt();
+    void aesEncrypt();
+    void aesDecrypt();
 };
