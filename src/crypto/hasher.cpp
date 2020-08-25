@@ -74,7 +74,7 @@ std::string zero::Hasher::hashutil(uint8_t    *out,
     std::string os = std::string();
 
     for (uint32_t i = 0; i < context.outlen; ++i) {
-        os += std::to_string((char)context.out[i]);
+        os += char(context.out[i]);
     }
     return os;
 }
@@ -111,14 +111,12 @@ std::string zero::Hasher::hash(const std::string& spwd,
     uint32_t threads = ARGON2_THREADS_DEF;
     const char *type = "d";
 
-    std::string op;
-
     try {
-        op = hashutil(out, pwd, salt, t_cost, m_cost, lanes, threads, type);
+        hashutil(out, pwd, salt, t_cost, m_cost, lanes, threads, type);
     }
     catch (std::exception& e)
     {
-        throw std::runtime_error{ "Error geerating hash" };
+        throw std::runtime_error{ "Error generating hash" };
     }
     return std::string(out, out + sizeof(out) / sizeof(out[0]));
 }

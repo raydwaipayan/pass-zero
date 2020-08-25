@@ -6,8 +6,14 @@ namespace zero {
 class Writer {
 public:
 
-    static bool write(database,
-                      const QString&);
+    /*!
+     * \brief Encrypt and write the databse to a file
+     * \param d Database to encrypt and write
+     * \param filename String containing the name of the file to write to
+     * \return boolean to denote success of the operation
+     */
+    static bool write(database       d,
+                      const QString& filename);
 };
 }
 #endif // WRITER_H
